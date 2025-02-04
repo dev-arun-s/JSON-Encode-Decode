@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Base64 Encode/Decode JSON</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        pre {
+            padding: 10px;
+            background-color: #f4f4f4;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-family: monospace;
+            word-break: break-all;
+            text-wrap-mode: wrap;
+        }
+
+        .output-container {
+            margin-top: 20px;
+        }
+
+        .option-btns {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .option-btns button {
+            width: 48%;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Base64 Encode/Decode JSON</h1>
+
+    <div class="option-btns">
+        <button onclick="showEncodeOption()">Encode JSON to Base64</button>
+        <button onclick="showDecodeOption()">Decode Base64 to JSON</button>
+    </div>
+
+    <!-- Encode JSON Section -->
+    <div id="encodeSection" style="display: none;">
+        <h2>Enter JSON to Encode:</h2>
+        <textarea id="jsonInput" placeholder="Enter your JSON object here..."></textarea>
+        <button onclick="encodeBase64()">Encode to Base64</button>
+    </div>
+
+    <!-- Decode Base64 Section -->
+    <div id="decodeSection" style="display: none;">
+        <h2>Enter Base64 Encoded JSON:</h2>
+        <textarea id="encodedInput" placeholder="Paste the Base64-encoded JSON string here..."></textarea>
+        <button onclick="decodeBase64()">Decode Base64</button>
+    </div>
+
+    <div class="output-container">
+        <h2>Output:</h2>
+        <pre id="output"></pre>
+    </div>
+</div>
+
+<script>
+    function showEncodeOption() {
+        document.getElementById('encodeSection').style.display = 'block';
+        document.getElementById('decodeSection').style.display = 'none';
+        document.getElementById('output').textContent = '';
+    }
+
+    function showDecodeOption() {
+        document.getElementById('decodeSection').style.display = 'block';
+        document.getElementById('encodeSection').style.display = 'none';
+        document.getElementById('output').textContent = '';
+    }
+
+    function encodeBase64() {
+        const jsonInput = document.getElementById('jsonInput').value.trim();
+
+        if (jsonInput === "") {
+            alert("Please enter a valid JSON object!");
+            return;
+        }
+
+        try {
+            const jsonObj = JSON.parse(jsonInput); // Validate if it's a valid JSON
+            const jsonString = JSON.stringify(jsonObj);
+            const encodedString = btoa(unescape(encodeURIComponent(jsonString)));
+
+            document.getElementById('output').textContent = encodedString;
+        } catch (e) {
+            alert("Invalid JSON format. Please check your input.");
+            document.getElementById('output').textContent = "";
+        }
+    }
+
+    function decodeBase64() {
+        const encodedString = document.getElementById('encodedInput').value.trim();
+
+        if (encodedString === "") {
+            alert("Please paste a Base64-encoded JSON string!");
+            return;
+        }
+
+        try {
+            const decodedString = atob(encodedString); // Decode Base64 string
+            const jsonObj = JSON.parse(decodedString); // Parse the decoded string into JSON
+
+            document.getElementById('output').textContent = JSON.stringify(jsonObj, null, 4);
+        } catch (e) {
+            alert("Invalid Base64 string or JSON format. Please try again.");
+            document.getElementById('output').textContent = "";
+        }
+    }
+</script>
+
+</body>
+</html>
